@@ -62,3 +62,13 @@ class CN2:
                         new_star.append(new_complex)
 
         return new_star
+    
+    def most_common_class(self, data):
+        """
+        Return the most common class among all the examples given in input
+        :param examples: DataFrame from which we want to find the most common class
+        :return: the name of teh most commons class, count
+        """
+        most_common_class = data['class'].value_counts().head(1)
+        
+        return most_common_class.indes[0], most_common_class[0]
