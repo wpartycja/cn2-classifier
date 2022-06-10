@@ -102,11 +102,30 @@ class CN2:
         :return: calculated entropy of the complex
         """
         covered_examples = self.get_covered_examples(self._P, complex) # self._P because here contrary to AQ algorithm we are training on the remainig examples
-        covered_classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
-        cov_classes_num = len(covered_classes)
-        class_count = covered_classes.value_counts()
-        class_prob = class_count / cov_classes_num
+        classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
+        classes_num = len(classes)
+        class_count = classes.value_counts()
+        class_prob = class_count / classes_num
         log = np.log2(class_prob)
         entropy = (class_prob * log).sum()
 
         return entropy * -1
+
+    def salience(self, complex):  # istotność
+        """
+        calculating salience of the given complex
+        """
+        covered_ex = self.get_covered_examples(self._P, complex)
+        classes = pd.DataFrame(self.data.iloc[covered_ex]['type'])
+        classes_num = len(classes)
+        class_count = classes.iloc[:,0].value_counts()
+        class_prob = class_count.divide(classes_num)
+
+        train_classes = self.data["type"]
+        train_classes_num = len(train_classes)
+        train_count = train_classes.value_counts()
+        train_prob = train_count.divide(train_classes_num)
+
+        return class_prob.multiply(np.log(class_prob.divide(train_prob))).sum() * 2
+
+
