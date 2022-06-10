@@ -1,4 +1,5 @@
-import from collections import Counter
+from collections import Counter
+
 
 class CN2:
 
