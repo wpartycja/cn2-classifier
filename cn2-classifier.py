@@ -1,5 +1,7 @@
 from collections import Counter
 
+from pandas import value_counts
+
 
 class CN2:
 
@@ -33,8 +35,8 @@ class CN2:
 
     def specialize_star(self, star, selectors):
         """
-        This function creates a new_star by doing intercetion with the previos star
-        and then it removes non-valid complexes (with duplicated values)
+        This function creates a new_star by doing intercetion with the previos
+        star and then it removes non-valid complexes (with duplicated values)
 
         :param star: the previos star, list of complexes
         :param selectors: list of selectors which will specialize the star
@@ -65,10 +67,29 @@ class CN2:
     
     def most_common_class(self, data):
         """
-        Return the most common class among all the examples given in input
+        This function returns the most common class among all the examples given in input
         :param examples: DataFrame from which we want to find the most common class
         :return: the name of teh most commons class, count
         """
         most_common_class = data['class'].value_counts().head(1)
+        return most_common_class.index[0], most_common_class[0]
+
+    def get_covered_examples(self, data, best_complex):
+        """
+        This function searches for all examples that are covered by given complex
+        :param data: DataFrame to search if the complex if covering examples from here or not
+        :param complex: a list containign tuples (attribute, value)
+        """
+        values_dict = {}
+        for pair in best_complex:
+            if pair[0] not in values_dict.keys():
+                values_dict[pair[0]] = [pair[1]]
+            else:
+                values_dict[pair[0]].append(pair[1])
         
-        return most_common_class.indes[0], most_common_class[0]
+        for column in self.data.columns:
+            if column not in values_dict:
+                values_dict[column] = set(self.data[column])
+
+        covered_examples = data[data.isin(values_dict).all(axis=1)]           
+        return covered_examples.index
