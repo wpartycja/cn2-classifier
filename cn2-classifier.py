@@ -1,3 +1,5 @@
+import from collections import Counter
+
 class CN2:
 
     def __init__(self, star_max_size=3, epsilon=0.5):
@@ -27,3 +29,35 @@ class CN2:
             possible_values = set(self.data[column])
             for value in possible_values:
                 self._selectors.append((column, value))
+
+    def specialize_star(self, star, selectors):
+        """
+        This function creates a new_star by doing intercetion with the previos star
+        and then it removes non-valid complexes (with duplicated values)
+
+        :param star: the previos star, list of complexes
+        :param selectors: list of selectors which will specialize the star
+        :return: new_star -> specialized star
+        """
+        new_star = []
+
+        if len(star) == 0:
+            for selector in selectors:
+                new_star.append([selector])
+        else:
+            for complex in star:
+                for selector in selectors:
+                    new_complex = complex.copy()
+                    new_complex.append(selector)
+
+                    # checking if the not duplicate
+                    duplicated = False
+                    count = Counter([x[0] for x in new_complex])
+                    for c_value in count.values():
+                        if c_value != 1:
+                            duplicated = True
+                            break
+                    if not duplicated:
+                        new_star.append(new_complex)
+
+        return new_star
