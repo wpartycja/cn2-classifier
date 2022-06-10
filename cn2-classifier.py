@@ -1,6 +1,6 @@
 from collections import Counter
-
-from pandas import value_counts
+import pandas as pd
+import numpy as np
 
 
 class CN2:
@@ -79,6 +79,7 @@ class CN2:
         This function searches for all examples that are covered by given complex
         :param data: DataFrame to search if the complex if covering examples from here or not
         :param complex: a list containign tuples (attribute, value)
+        :return: indexes of covered examples
         """
         values_dict = {}
         for pair in best_complex:
@@ -93,3 +94,19 @@ class CN2:
 
         covered_examples = data[data.isin(values_dict).all(axis=1)]           
         return covered_examples.index
+
+    def entropy(self, complex):
+        """
+        Calculates entopy of a complex
+        :param complex: complex of which we are calculating the entropy
+        :return: calculated entropy of the complex
+        """
+        covered_examples = self.get_covered_examples(self._P, complex) # self._P because here contrary to AQ algorithm we are training on the remainig examples
+        covered_classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
+        cov_classes_num = len(covered_classes)
+        class_count = covered_classes.value_counts()
+        class_prob = class_count / cov_classes_num
+        log = np.log2(class_prob)
+        entropy = (class_prob * log).sum()
+
+        return entropy * -1
