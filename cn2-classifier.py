@@ -136,16 +136,16 @@ class CN2:
 
         return new_star
 
-    def most_common_class(self, data):
+    def most_common_class(self, covered_ex):
         """
         This function returns the most common class among all the examples given in input
         :param examples: DataFrame from which we want to find the most common class
         :return: the name of teh most commons class, count
         """
-        classes = self.data.loc[data, [list(self.data)[-1]]]
-        most_common_class = classes.iloc[:,0].value_counts().index[0]
-        count = classes.iloc[:,0].value_counts()[0]
-        return most_common_class, count
+        print(type(covered_ex))
+        print(covered_ex)
+        most_common_class = self.data.iloc[covered_ex, :]['class'].value_counts().head(1)
+        return most_common_class.index[0], most_common_class[0]
 
     def get_covered_examples(self, data, best_complex):
         """
