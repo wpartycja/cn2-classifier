@@ -1,7 +1,8 @@
 from collections import Counter
 
-import pandas as pd
 import numpy as np
+import pandas as pd
+from tqdm import tqdm
 
 
 class CN2:
@@ -13,7 +14,6 @@ class CN2:
         self._P = []  # subset on which we will train in every iteration (when it's empty algorithm is done)
         self._selectors = []  # set of atomic selectors
 
-    # @TODO - here will appear all the magic
     def fit(self, dataset) -> list:
         self.data = pd.read_csv(dataset).head(53)
         self._P = self.data.copy()
@@ -23,13 +23,14 @@ class CN2:
         classes = pd.DataFrame(self.data['class'])
         classes_count = classes.value_counts()
 
-        while self._P:
+        while not self._P.empty:
+            print(f"{len(self._P)} examples left")#\r", end='')
             best_complex = self.calculate_best_complex()
             if best_complex is None:
                 break
             covered_examples = self.get_covered_examples(self._P, best_complex)
             most_common_class, count = self.most_common_class(self._P.iloc[covered_examples])
-            self._P = self._P.drop(covered_examples)
+            self._P.drop(covered_examples, inplace=True)
 
             total = classes_count[most_common_class] if most_common_class in classes_count.keys() else 0
             coverage = count / total
@@ -46,8 +47,50 @@ class CN2:
         return rules
 
     # @TODO
-    def predict(self):
-        pass
+    def predict(self, test_file_path, rules):
+        test_data = pd.read_csv(test_file_path)
+        test_classes = test_data.iloc[:, -1]
+        test_data = test_data.drop(columns='class')
+        predicted_classes = [None for _ in range(len(test_data))]
+        rules_performance = []
+        remaining_examples = test_data.copy()
+
+        for rule in rules:
+            rule_complex = rule[0]
+
+            if rule_complex:
+                covered_examples = self.get_covered_examples(remaining_examples, rule_complex)
+                remaining_examples.drop(covered_examples, inplace=True)
+                indexes = list(covered_examples)
+            elif len(remaining_examples) > 0:
+                indexes = list(remaining_examples.index)
+            else:
+                indexes = None
+
+            predicted_class = rule[1]
+            correct_predictions, wrong_predictions = 0, 0
+
+            for index in indexes:
+                predicted_classes[index] = predicted_class
+                if test_classes[index] == predicted_class:
+                    correct_predictions += 1
+                else:
+                    wrong_predictions += 1
+
+            total = correct_predictions + wrong_predictions
+            accuracy = correct_predictions / total if total > 0 else None
+
+            performance = {
+                'rule': rule,
+                'predicted classes': predicted_class,
+                'correct predictions': correct_predictions,
+                'wrong predictions': wrong_predictions,
+                'accuracy': accuracy
+            }
+            rules_performance.append(performance)
+
+        return predicted_classes, rules_performance
+
 
     def find_selectors(self):
         """
@@ -161,15 +204,15 @@ class CN2:
     def calculate_best_complex(self):
         best_complex = None
         best_entropy = np.inf
-        best_salicence = 0
+        best_salience = 0
         star = []
 
         while True:
             all_entropies = {}
             new_star = self.specialize_star(star, self._selectors)
 
-            # needs to be this way because list is no t hashable type (so here can't be complex)
-            for idx in range(len(new_star)):
+            # needs to be this way because list is not a hashable type (so here can't be complex)
+            for idx in tqdm(range(len(new_star))):
                 complex = new_star[idx]
                 cpx_salience = self.salience(complex)
                 if cpx_salience > self.epsilon:
@@ -178,19 +221,27 @@ class CN2:
                     if entropy < best_entropy:
                         best_complex = complex.copy()
                         best_entropy = entropy
-                        best_salicence = cpx_salience
+                        best_salience = cpx_salience
 
             best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)
             for cpx in best_complexes:
                 star.append(new_star[cpx[0]])
 
-            if len(star) == 0 or best_salicence < self.epsilon:
+            if len(star) == 0 or best_salience < self.epsilon:
                 break
+            print(f"Best salience: {best_salience}; Star size: {len(star)}")
 
         return best_complex
 
 
-if __name__ == '__main__':
+def iris_test():
     cn2 = CN2()
-    cn2.fit("./data/csv/iris.csv")
-    print(cn2.calculate_best_complex())
+    rules = cn2.fit('./data/csv/iris.csv')
+    print(rules)
+
+
+if __name__ == '__main__':
+    iris_test()
+    # cn2 = CN2()
+    # cn2.fit("./data/csv/iris.csv")
+    # print(cn2.calculate_best_complex())
