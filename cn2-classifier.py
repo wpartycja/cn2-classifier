@@ -15,7 +15,7 @@ class CN2:
         self._selectors = []  # set of atomic selectors
 
     def fit(self, dataset) -> list:
-        self.data = pd.read_csv(dataset).head(53)
+        self.data = pd.read_csv(dataset)
         self._P = self.data.copy()
         self.find_selectors()
 
