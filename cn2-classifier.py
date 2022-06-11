@@ -24,7 +24,7 @@ class CN2:
         classes_count = classes.value_counts()
 
         while not self._P.empty:
-            print(f"{len(self._P)} examples left")#\r", end='')
+            print(f"{len(self._P)} examples left")
             best_complex = self.calculate_best_complex()
             if best_complex is None:
                 break
@@ -46,7 +46,6 @@ class CN2:
 
         return rules
 
-    # @TODO
     def predict(self, test_file_path, rules):
         test_data = pd.read_csv(test_file_path)
         test_classes = test_data.iloc[:, -1]
@@ -223,9 +222,11 @@ class CN2:
                         best_entropy = entropy
                         best_salience = cpx_salience
 
-            best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)
-            for cpx in best_complexes:
-                star.append(new_star[cpx[0]])
+            best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)[:self.star_max_size]
+
+            star = [new_star[x[0]] for x in best_complexes]
+            # for cpx in best_complexes:
+            #     star.append(new_star[cpx[0]])
 
             if len(star) == 0 or best_salience < self.epsilon:
                 break
