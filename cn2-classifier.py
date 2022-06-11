@@ -38,7 +38,7 @@ class CN2:
 
             rules.append((best_complex, most_common_class, coverage, precision))
 
-        most_common_class, count = self.most_common_class(self.data)
+        most_common_class, count = self.most_common_class(self.data.index)
         total = classes_count[most_common_class]
         coverage = count / total
         precision = count / len(self.data)
