@@ -2,6 +2,7 @@ from collections import Counter
 
 import numpy as np
 import pandas as pd
+from scipy.spatial.distance import hamming
 from tqdm import tqdm
 
 
@@ -50,21 +51,23 @@ class CN2:
         test_data = pd.read_csv(test_file_path)
         test_classes = test_data.iloc[:, -1]
         test_data = test_data.drop(columns='class')
-        predicted_classes = [None for _ in range(len(test_data))]
+        predicted_classes = ["" for _ in range(len(test_data))]
         rules_performance = []
         remaining_examples = test_data.copy()
 
         for rule in rules:
+            print(f"RULES: {rules}")
+            print(f"RULE: {rule}")
             rule_complex = rule[0]
 
-            if rule_complex:
+            if rule_complex is not None:
                 covered_examples = self.get_covered_examples(remaining_examples, rule_complex)
                 remaining_examples.drop(covered_examples, inplace=True)
                 indexes = list(covered_examples)
             elif len(remaining_examples) > 0:
                 indexes = list(remaining_examples.index)
             else:
-                indexes = None
+                continue
 
             predicted_class = rule[1]
             correct_predictions, wrong_predictions = 0, 0
@@ -88,8 +91,7 @@ class CN2:
             }
             rules_performance.append(performance)
 
-        return predicted_classes, rules_performance
-
+        return rules_performance, hamming(predicted_classes, test_classes)# * len(predicted_classes)
 
     def find_selectors(self):
         """
@@ -238,7 +240,26 @@ class CN2:
 def iris_test():
     cn2 = CN2()
     rules = cn2.fit('./data/csv/iris.csv')
-    print(rules)
+    # print(rules)
+    perf, acc = cn2.predict('./data/csv/iris.csv', rules)
+    print(acc)
+    exit(1)
+    # print(f"Accuracy: {acc}")
+    keys, vals = [], []
+
+    for data in perf:
+        val = []
+        for key, value in data.items():
+            keys.append(key)
+            val.append(value)
+        vals.append(val)
+
+    exit(1)
+
+    table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
+    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
+        print(table)
+    table.to_csv('./data/output/iris_performance.csv', index=False)
 
 
 if __name__ == '__main__':
