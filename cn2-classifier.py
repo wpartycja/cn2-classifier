@@ -142,7 +142,6 @@ class CN2:
         :param examples: DataFrame from which we want to find the most common class
         :return: the name of teh most commons class, count
         """
-        print(covered_ex)
         most_common_class = self.data.iloc[covered_ex, :]['class'].value_counts().head(1)
         return most_common_class.index[0], most_common_class[0]
 
