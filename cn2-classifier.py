@@ -1,4 +1,6 @@
+import json
 from collections import Counter
+from typing import List, Dict, Any
 
 import numpy as np
 import pandas as pd
@@ -47,7 +49,7 @@ class CN2:
 
         return rules
 
-    def predict(self, test_file_path, rules):
+    def predict(self, test_file_path, rules) -> list[dict[str, int | float | None | Any]]:
         test_data = pd.read_csv(test_file_path)
         test_classes = test_data.iloc[:, -1]
         test_data = test_data.drop(columns='class')
@@ -56,8 +58,6 @@ class CN2:
         remaining_examples = test_data.copy()
 
         for rule in rules:
-            print(f"RULES: {rules}")
-            print(f"RULE: {rule}")
             rule_complex = rule[0]
 
             if rule_complex is not None:
@@ -91,7 +91,7 @@ class CN2:
             }
             rules_performance.append(performance)
 
-        return rules_performance, hamming(predicted_classes, test_classes)# * len(predicted_classes)
+        return rules_performance#, hamming(predicted_classes, test_classes)  # * len(predicted_classes)
 
     def find_selectors(self):
         """
@@ -237,12 +237,35 @@ class CN2:
         return best_complex
 
 
+def pretty_print_results(results: list) -> None:
+    print("\n\n")
+    for result in results:
+        rule = result["rule"]
+        correct = result["correct predictions"]
+        wrong = result["wrong predictions"]
+        if correct + wrong == 0:
+            continue
+
+        print(f"For rule:\n{rule}")
+        print(f"Correct: {correct}; Wrong: {wrong}")
+        print(f"Accuracy: {correct / (correct + wrong) * 100}%")
+        # print(f"{rule}: {correct} correct, {wrong} wrong")
+        print("\n")
+    return
+
+
 def iris_test():
     cn2 = CN2()
     rules = cn2.fit('./data/csv/iris.csv')
     # print(rules)
-    perf, acc = cn2.predict('./data/csv/iris.csv', rules)
-    print(acc)
+    results = cn2.predict('./data/csv/iris.csv', rules)
+    # print(acc)
+    # print(perf)
+    pretty_print_results(results)
+    exit(1)
+    with open("./data/iris_report.json", "w") as f:
+        json.dump(results, f)
+
     exit(1)
     # print(f"Accuracy: {acc}")
     keys, vals = [], []
