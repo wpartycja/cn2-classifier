@@ -29,7 +29,7 @@ class CN2:
             if best_complex is None:
                 break
             covered_examples = self.get_covered_examples(self._P, best_complex)
-            most_common_class, count = self.most_common_class(self._P.iloc[covered_examples])
+            most_common_class, count = self.most_common_class(covered_examples)
             self._P.drop(covered_examples, inplace=True)
 
             total = classes_count[most_common_class] if most_common_class in classes_count.keys() else 0
