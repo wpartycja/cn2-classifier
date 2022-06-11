@@ -10,11 +10,19 @@ class CN2:
         self.star_max_size = star_max_size
         self.epsilon = epsilon  # significance (between 0 and 1) @TODO error handling when user inputs sth stupid
         self._P = []  # subset on which we will train in every iteration (when it's 0 algorithm is done)
-        self._selectors = []  # set of atomic selectros
+        self._selectors = []  # set of atomic selectrors
 
     # @TODO - here will appear all the magic
     def fit(self, dataset):
-        pass
+        self.data = pd.read_csv(dataset).head(53)
+        self._P = self.data.copy()
+        self.find_selectors()
+        rules = []
+        classes = pd.DataFrame(self.data['class'])
+        classes_count = classes.value_counts()
+
+        # while len(self._P != 0):
+        #     best_complex = self.be
 
     # @TODO
     def predict(self):
@@ -104,7 +112,7 @@ class CN2:
         covered_examples = self.get_covered_examples(self._P, complex) # self._P because here contrary to AQ algorithm we are training on the remainig examples
         classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
         classes_num = len(classes)
-        class_count = classes.value_counts()
+        class_count = classes.iloc[:,0].value_counts()
         class_prob = class_count / classes_num
         log = np.log2(class_prob)
         entropy = (class_prob * log).sum()
@@ -116,16 +124,50 @@ class CN2:
         calculating salience of the given complex
         """
         covered_ex = self.get_covered_examples(self._P, complex)
-        classes = pd.DataFrame(self.data.iloc[covered_ex]['type'])
+        classes = pd.DataFrame(self.data.iloc[covered_ex]['class'])
         classes_num = len(classes)
         class_count = classes.iloc[:,0].value_counts()
         class_prob = class_count.divide(classes_num)
 
-        train_classes = self.data["type"]
+        train_classes = self.data["class"]
         train_classes_num = len(train_classes)
         train_count = train_classes.value_counts()
         train_prob = train_count.divide(train_classes_num)
 
         return class_prob.multiply(np.log(class_prob.divide(train_prob))).sum() * 2
 
+    def calculate_best_complex(self):
+        best_complex = None
+        best_entropy = np.inf
+        best_salicence = 0
+        star = []
+
+        while True:
+            all_entropies = {}
+            new_star = self.specialize_star(star, self._selectors)
+            
+            # needs to be this way because list is no t hashable type (so here can't be complex)
+            for idx in range(len(new_star)):
+                complex = new_star[idx]
+                cpx_salience = self.salience(complex)
+                if cpx_salience > self.epsilon:
+                    entropy = self.entropy(complex)
+                    all_entropies[idx] = entropy
+                    if entropy < best_entropy:
+                        best_complex = complex.copy()
+                        best_entropy = entropy
+                        best_salicence = cpx_salience
+            
+            best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)
+            for cpx in best_complexes:
+                star.append(new_star[cpx[0]])
+            
+            if len(star) == 0 or best_salicence < self.epsilon:
+                break
+        
+        return best_complex
+
+cn2 = CN2()
+cn2.fit("./data/csv/iris.csv")
+print(cn2.calculate_best_complex())
 
