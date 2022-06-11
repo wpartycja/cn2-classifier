@@ -1,4 +1,5 @@
 from collections import Counter
+
 import pandas as pd
 import numpy as np
 
@@ -8,21 +9,41 @@ class CN2:
     def __init__(self, star_max_size=3, epsilon=0.5):
         self.data = None
         self.star_max_size = star_max_size
-        self.epsilon = epsilon  # significance (between 0 and 1) @TODO error handling when user inputs sth stupid
-        self._P = []  # subset on which we will train in every iteration (when it's 0 algorithm is done)
-        self._selectors = []  # set of atomic selectrors
+        self.epsilon = epsilon if 0 < epsilon < 1 else 0.5  # significance
+        self._P = []  # subset on which we will train in every iteration (when it's empty algorithm is done)
+        self._selectors = []  # set of atomic selectors
 
     # @TODO - here will appear all the magic
-    def fit(self, dataset):
+    def fit(self, dataset) -> list:
         self.data = pd.read_csv(dataset).head(53)
         self._P = self.data.copy()
         self.find_selectors()
+
         rules = []
         classes = pd.DataFrame(self.data['class'])
         classes_count = classes.value_counts()
 
-        # while len(self._P != 0):
-        #     best_complex = self.be
+        while self._P:
+            best_complex = self.calculate_best_complex()
+            if best_complex is None:
+                break
+            covered_examples = self.get_covered_examples(self._P, best_complex)
+            most_common_class, count = self.most_common_class(self._P.iloc[covered_examples])
+            self._P = self._P.drop(covered_examples)
+
+            total = classes_count[most_common_class] if most_common_class in classes_count.keys() else 0
+            coverage = count / total
+            precision = count / len(covered_examples)
+
+            rules.append((best_complex, most_common_class, coverage, precision))
+
+        most_common_class, count = self.most_common_class(self.data)
+        total = classes_count[most_common_class]
+        coverage = count / total
+        precision = count / len(self.data)
+        rules.append(([], most_common_class, coverage, precision))
+
+        return rules
 
     # @TODO
     def predict(self):
@@ -72,7 +93,7 @@ class CN2:
                         new_star.append(new_complex)
 
         return new_star
-    
+
     def most_common_class(self, data):
         """
         This function returns the most common class among all the examples given in input
@@ -95,12 +116,12 @@ class CN2:
                 values_dict[pair[0]] = [pair[1]]
             else:
                 values_dict[pair[0]].append(pair[1])
-        
+
         for column in self.data.columns:
             if column not in values_dict:
                 values_dict[column] = set(self.data[column])
 
-        covered_examples = data[data.isin(values_dict).all(axis=1)]           
+        covered_examples = data[data.isin(values_dict).all(axis=1)]
         return covered_examples.index
 
     def entropy(self, complex):
@@ -109,10 +130,11 @@ class CN2:
         :param complex: complex of which we are calculating the entropy
         :return: calculated entropy of the complex
         """
-        covered_examples = self.get_covered_examples(self._P, complex) # self._P because here contrary to AQ algorithm we are training on the remainig examples
+        covered_examples = self.get_covered_examples(self._P,
+                                                     complex)  # self._P because here contrary to AQ algorithm we are training on the remainig examples
         classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
         classes_num = len(classes)
-        class_count = classes.iloc[:,0].value_counts()
+        class_count = classes.iloc[:, 0].value_counts()
         class_prob = class_count / classes_num
         log = np.log2(class_prob)
         entropy = (class_prob * log).sum()
@@ -126,7 +148,7 @@ class CN2:
         covered_ex = self.get_covered_examples(self._P, complex)
         classes = pd.DataFrame(self.data.iloc[covered_ex]['class'])
         classes_num = len(classes)
-        class_count = classes.iloc[:,0].value_counts()
+        class_count = classes.iloc[:, 0].value_counts()
         class_prob = class_count.divide(classes_num)
 
         train_classes = self.data["class"]
@@ -145,7 +167,7 @@ class CN2:
         while True:
             all_entropies = {}
             new_star = self.specialize_star(star, self._selectors)
-            
+
             # needs to be this way because list is no t hashable type (so here can't be complex)
             for idx in range(len(new_star)):
                 complex = new_star[idx]
@@ -157,17 +179,18 @@ class CN2:
                         best_complex = complex.copy()
                         best_entropy = entropy
                         best_salicence = cpx_salience
-            
+
             best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)
             for cpx in best_complexes:
                 star.append(new_star[cpx[0]])
-            
+
             if len(star) == 0 or best_salicence < self.epsilon:
                 break
-        
+
         return best_complex
 
-cn2 = CN2()
-cn2.fit("./data/csv/iris.csv")
-print(cn2.calculate_best_complex())
 
+if __name__ == '__main__':
+    cn2 = CN2()
+    cn2.fit("./data/csv/iris.csv")
+    print(cn2.calculate_best_complex())
