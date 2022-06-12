@@ -273,8 +273,6 @@ class CN2:
             )[: self.star_max_size]
 
             star = [new_star[x[0]] for x in best_complexes]
-            # for cpx in best_complexes:
-            #     star.append(new_star[cpx[0]])
 
             if len(star) == 0 or best_salience < self.epsilon:
                 break
