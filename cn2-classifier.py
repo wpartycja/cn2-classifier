@@ -9,7 +9,6 @@ from tqdm import tqdm
 
 
 class CN2:
-
     def __init__(self, star_max_size=3, epsilon=0.5):
         """
         This function initializes the algorithm
@@ -20,7 +19,9 @@ class CN2:
         self.data = None
         self.star_max_size = star_max_size
         self.epsilon = epsilon if 0 < epsilon < 1 else 0.5  # significance
-        self._P = []  # subset on which we will train in every iteration (when it's empty algorithm is done)
+        self._P = (
+            []
+        )  # subset on which we will train in every iteration (when it's empty algorithm is done)
         self._selectors = []  # set of atomic selectors
 
     def fit(self, dataset) -> list:
@@ -35,7 +36,7 @@ class CN2:
         self.find_selectors()
 
         rules = []
-        classes = pd.DataFrame(self.data['class'])
+        classes = pd.DataFrame(self.data["class"])
         classes_count = classes.value_counts()
 
         while not self._P.empty:
@@ -47,7 +48,11 @@ class CN2:
             most_common_class, count = self.most_common_class(covered_examples)
             self._P.drop(covered_examples, inplace=True)
 
-            total = classes_count[most_common_class] if most_common_class in classes_count.keys() else 0
+            total = (
+                classes_count[most_common_class]
+                if most_common_class in classes_count.keys()
+                else 0
+            )
             coverage = count / total
             precision = count / len(covered_examples)
 
@@ -61,7 +66,9 @@ class CN2:
 
         return rules
 
-    def predict(self, test_file_path, rules) -> (list[dict[str, int | float | None | Any]], int):
+    def predict(
+        self, test_file_path, rules
+    ) -> (list[dict[str, int | float | None | Any]], int):
         """
         This function performs predictions on given test file using given rules
 
@@ -71,7 +78,7 @@ class CN2:
         """
         test_data = pd.read_csv(test_file_path)
         test_classes = test_data.iloc[:, -1]
-        test_data = test_data.drop(columns='class')
+        test_data = test_data.drop(columns="class")
         predicted_classes = ["" for _ in range(len(test_data))]
         rules_performance = []
         remaining_examples = test_data.copy()
@@ -80,7 +87,9 @@ class CN2:
             rule_complex = rule[0]
 
             if rule_complex is not None:
-                covered_examples = self.get_covered_examples(remaining_examples, rule_complex)
+                covered_examples = self.get_covered_examples(
+                    remaining_examples, rule_complex
+                )
                 remaining_examples.drop(covered_examples, inplace=True)
                 indexes = list(covered_examples)
             elif len(remaining_examples) > 0:
@@ -102,11 +111,11 @@ class CN2:
             accuracy = correct_predictions / total if total > 0 else None
 
             performance = {
-                'rule': rule,
-                'predicted classes': predicted_class,
-                'correct predictions': correct_predictions,
-                'wrong predictions': wrong_predictions,
-                'accuracy': accuracy
+                "rule": rule,
+                "predicted classes": predicted_class,
+                "correct predictions": correct_predictions,
+                "wrong predictions": wrong_predictions,
+                "accuracy": accuracy,
             }
             rules_performance.append(performance)
 
@@ -118,7 +127,7 @@ class CN2:
         writes to self._selectors in this pattern:
         self._selectors = [('column1', 'value1'), ('column1', 'value2')]
         """
-        possible_selectors = self.data.drop(columns='class')
+        possible_selectors = self.data.drop(columns="class")
 
         for column in possible_selectors:
             possible_values = set(self.data[column])
@@ -164,7 +173,9 @@ class CN2:
         :param covered_ex: DataFrame from which we want to find the most common class
         :return: the name of teh most commons class, count
         """
-        most_common_class = self.data.iloc[covered_ex, :]['class'].value_counts().head(1)
+        most_common_class = (
+            self.data.iloc[covered_ex, :]["class"].value_counts().head(1)
+        )
         print(f"AAAAAAAAAAA{most_common_class.index[0]}")
         print(f"BBBBBBBBBBB{most_common_class[0]}")
         return most_common_class.index[0], most_common_class[0]
@@ -198,9 +209,10 @@ class CN2:
         :param cpx: complex of which we are calculating the entropy
         :return: calculated entropy of the complex
         """
-        covered_examples = self.get_covered_examples(self._P,
-                                                     cpx)  # self._P because here contrary to AQ algorithm we are training on the remainig examples
-        classes = pd.DataFrame(self.data.iloc[covered_examples]['class'])
+        covered_examples = self.get_covered_examples(
+            self._P, cpx
+        )  # self._P because here contrary to AQ algorithm we are training on the remainig examples
+        classes = pd.DataFrame(self.data.iloc[covered_examples]["class"])
         classes_num = len(classes)
         class_count = classes.iloc[:, 0].value_counts()
         class_prob = class_count / classes_num
@@ -217,7 +229,7 @@ class CN2:
         :return: calculated salience of the complex
         """
         covered_ex = self.get_covered_examples(self._P, cpx)
-        classes = pd.DataFrame(self.data.iloc[covered_ex]['class'])
+        classes = pd.DataFrame(self.data.iloc[covered_ex]["class"])
         classes_num = len(classes)
         class_count = classes.iloc[:, 0].value_counts()
         class_prob = class_count.divide(classes_num)
@@ -256,7 +268,9 @@ class CN2:
                         best_entropy = entropy
                         best_salience = cpx_salience
 
-            best_complexes = sorted(all_entropies.items(), key=lambda x: x[1], reverse=False)[:self.star_max_size]
+            best_complexes = sorted(
+                all_entropies.items(), key=lambda x: x[1], reverse=False
+            )[: self.star_max_size]
 
             star = [new_star[x[0]] for x in best_complexes]
             # for cpx in best_complexes:
@@ -301,14 +315,14 @@ def test(name: str):
     print(f"Working on {name}...")
     cn2 = CN2()
     rules = cn2.fit(f"./data/csv/{name}.csv")
-    results, accuracy = cn2.predict(f'./data/csv/{name}.csv', rules)
+    results, accuracy = cn2.predict(f"./data/csv/{name}.csv", rules)
     pretty_print_results(results)
     print(f"Overall accuracy for {name}: {accuracy}%\n\n")
     with open(f"./data/{name}_report.json", "w") as f:
         json.dump(results, f)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # test("iris")
     # test("breast-cancer-wisconsin")
     test("zoo")
