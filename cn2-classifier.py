@@ -49,7 +49,7 @@ class CN2:
 
         return rules
 
-    def predict(self, test_file_path, rules) -> list[dict[str, int | float | None | Any]]:
+    def predict(self, test_file_path, rules) -> (list[dict[str, int | float | None | Any]], int):
         test_data = pd.read_csv(test_file_path)
         test_classes = test_data.iloc[:, -1]
         test_data = test_data.drop(columns='class')
@@ -91,7 +91,7 @@ class CN2:
             }
             rules_performance.append(performance)
 
-        return rules_performance#, hamming(predicted_classes, test_classes)  # * len(predicted_classes)
+        return rules_performance, 100 * (1 - hamming(predicted_classes, test_classes))
 
     def find_selectors(self):
         """
@@ -145,6 +145,8 @@ class CN2:
         :return: the name of teh most commons class, count
         """
         most_common_class = self.data.iloc[covered_ex, :]['class'].value_counts().head(1)
+        print(f"AAAAAAAAAAA{most_common_class.index[0]}")
+        print(f"BBBBBBBBBBB{most_common_class[0]}")
         return most_common_class.index[0], most_common_class[0]
 
     def get_covered_examples(self, data, best_complex):
@@ -249,44 +251,22 @@ def pretty_print_results(results: list) -> None:
         print(f"For rule:\n{rule}")
         print(f"Correct: {correct}; Wrong: {wrong}")
         print(f"Accuracy: {correct / (correct + wrong) * 100}%")
-        # print(f"{rule}: {correct} correct, {wrong} wrong")
         print("\n")
     return
 
 
-def iris_test():
+def test(name: str):
+    print(f"Working on {name}...")
     cn2 = CN2()
-    rules = cn2.fit('./data/csv/iris.csv')
-    # print(rules)
-    results = cn2.predict('./data/csv/iris.csv', rules)
-    # print(acc)
-    # print(perf)
+    rules = cn2.fit(f"./data/csv/{name}.csv")
+    results, accuracy = cn2.predict(f'./data/csv/{name}.csv', rules)
     pretty_print_results(results)
-    exit(1)
-    with open("./data/iris_report.json", "w") as f:
+    print(f"Overall accuracy for {name}: {accuracy}%\n\n")
+    with open(f"./data/{name}_report.json", "w") as f:
         json.dump(results, f)
-
-    exit(1)
-    # print(f"Accuracy: {acc}")
-    keys, vals = [], []
-
-    for data in perf:
-        val = []
-        for key, value in data.items():
-            keys.append(key)
-            val.append(value)
-        vals.append(val)
-
-    exit(1)
-
-    table = pd.DataFrame([v for v in vals], columns=list(dict.fromkeys(keys)))
-    with pd.option_context('display.max_rows', None, 'display.max_columns', None):
-        print(table)
-    table.to_csv('./data/output/iris_performance.csv', index=False)
 
 
 if __name__ == '__main__':
-    iris_test()
-    # cn2 = CN2()
-    # cn2.fit("./data/csv/iris.csv")
-    # print(cn2.calculate_best_complex())
+    # test("iris")
+    # test("breast-cancer-wisconsin")
+    test("zoo")
