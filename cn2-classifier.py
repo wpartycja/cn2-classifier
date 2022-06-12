@@ -1,5 +1,6 @@
-import json
 from collections import Counter
+import json
+import time
 from typing import Any
 
 import numpy as np
@@ -177,7 +178,9 @@ class CN2:
             self.data.iloc[covered_ex, :]["class"].value_counts().head(1)
         )
         print(f"AAAAAAAAAAA{most_common_class.index[0]}")
-        print(f"BBBBBBBBBBB{most_common_class[0]}") # TODO: dlaczego to się wypierdala (ale nie przy iris)?
+        print(
+            f"BBBBBBBBBBB{most_common_class[0]}"
+        )  # TODO: dlaczego to się wypierdala (ale nie przy iris)?
         return most_common_class.index[0], most_common_class[0]
 
     def get_covered_examples(self, data, best_complex):
@@ -312,15 +315,26 @@ def test(name: str):
     """
     print(f"Working on {name}...")
     cn2 = CN2()
+    # measure time it takes to train the algorithm
+    start = time.time()
     rules = cn2.fit(f"./data/csv/{name}.csv")
+    end = time.time()
+    training_time = end - start
+    start = time.time()
     results, accuracy = cn2.predict(f"./data/csv/{name}.csv", rules)
+    end = time.time()
+    prediction_time = end - start
     pretty_print_results(results)
-    print(f"Overall accuracy for {name}: {accuracy}%\n\n")
+    print(f"Overall accuracy for {name}: {accuracy}%\n")
+    print(f"Time taken to train the algorithm: {training_time} seconds")
+    print(f"Time taken to predict: {prediction_time} seconds\n")
+    print(f"Training time per example: {training_time / len(results)} seconds")
+    print(f"Prediction time per example: {prediction_time / len(results)} seconds")
     with open(f"./data/{name}_report.json", "w") as f:
         json.dump(results, f)
 
 
 if __name__ == "__main__":
-    # test("iris")
+    test("iris")
     # test("breast-cancer-wisconsin")
-    test("zoo")
+    # test("zoo")
