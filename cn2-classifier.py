@@ -177,7 +177,7 @@ class CN2:
             self.data.iloc[covered_ex, :]["class"].value_counts().head(1)
         )
         print(f"AAAAAAAAAAA{most_common_class.index[0]}")
-        print(f"BBBBBBBBBBB{most_common_class[0]}")
+        print(f"BBBBBBBBBBB{most_common_class[0]}") # TODO: dlaczego to się wypierdala (ale nie przy iris)?
         return most_common_class.index[0], most_common_class[0]
 
     def get_covered_examples(self, data, best_complex):
