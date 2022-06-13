@@ -306,7 +306,7 @@ def pretty_print_results(results: list) -> None:
 
 def test(name: str):
     """
-    This function tests the algorithm on the given dataset and saves the results summary to json
+    This function tests the algorithm on the given dataset and saves the results summary to .report file
 
     :param name: dataset name
     :return: nothing
