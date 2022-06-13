@@ -1,5 +1,5 @@
-import sys
 from collections import Counter
+import sys
 import time
 from typing import Any
 
@@ -292,24 +292,30 @@ def pretty_print_results(results: list) -> None:
     :return: Nothing
     """
     print("\n\n")
-    number_of_valid_rules = len(  # drop rules with 0 coverage
-        list(
-            filter(
-                lambda x: x["correct predictions"] + x["wrong predictions"] > 0, results
-            )
-        )
-    )
     for i, result in enumerate(results):
         correct = result["correct predictions"]
         wrong = result["wrong predictions"]
-        if correct + wrong == 0:
-            continue
         rule = result["rule"]
 
-        print(f"Rule #{i + 1}/{number_of_valid_rules}:\n{rule}")
+        print(f"Rule #{i + 1}/{len(results)}:\n{rule}")
         print(f"Correct: {correct}; Wrong: {wrong}")
-        print(f"Accuracy: {correct / (correct + wrong) * 100}%")
+        print(
+            f"Accuracy: {(correct / (correct + wrong) * 100) if correct + wrong != 0 else 'NaN'}%"
+        )
         print("\n")
+
+    number_of_valid_rules = (
+        len(  # valid rule in this case means a rule with non-zero coverage
+            list(
+                filter(
+                    lambda x: x["correct predictions"] + x["wrong predictions"] > 0,
+                    results,
+                )
+            )
+        )
+    )
+    invalid_rules = len(results) - number_of_valid_rules
+    print(f"{invalid_rules} rule{'s' if invalid_rules > 1 else ''} had 0 coverage")
     return
 
 
