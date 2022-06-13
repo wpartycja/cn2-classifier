@@ -1,8 +1,9 @@
+import sys
 from collections import Counter
-import json
 import time
 from typing import Any
 
+from art import text2art
 import numpy as np
 import pandas as pd
 from scipy.spatial.distance import hamming
@@ -20,9 +21,7 @@ class CN2:
         self.data = None
         self.star_max_size = star_max_size
         self.epsilon = epsilon if 0 < epsilon < 1 else 0.5  # significance
-        self._P = (
-            []
-        )  # subset on which we will train in every iteration (when it's empty algorithm is done)
+        self._P = pd.DataFrame()
         self._selectors = []  # set of atomic selectors
 
     def fit(self, dataset) -> list:
@@ -40,24 +39,28 @@ class CN2:
         classes = pd.DataFrame(self.data["class"])
         classes_count = classes.value_counts()
 
-        while not self._P.empty:
-            print(f"{len(self._P)} examples left")
-            best_complex = self.calculate_best_complex()
-            if best_complex is None:
-                break
-            covered_examples = self.get_covered_examples(self._P, best_complex)
-            most_common_class, count = self.most_common_class(covered_examples)
-            self._P.drop(covered_examples, inplace=True)
+        tqdm_max = len(self._P)
+        with tqdm(total=tqdm_max) as pbar:
+            while not self._P.empty:
+                best_complex = self.calculate_best_complex()
+                if best_complex is None:
+                    break
+                covered_examples = self.get_covered_examples(self._P, best_complex)
+                most_common_class, count = self.most_common_class(covered_examples)
+                self._P.drop(covered_examples, inplace=True)
 
-            total = (
-                classes_count[most_common_class]
-                if most_common_class in classes_count.keys()
-                else 0
-            )
-            coverage = count / total
-            precision = count / len(covered_examples)
+                total = (
+                    classes_count[most_common_class]
+                    if most_common_class in classes_count.keys()
+                    else 0
+                )
+                coverage = count / total
+                precision = count / len(covered_examples)
 
-            rules.append((best_complex, most_common_class, coverage, precision))
+                rules.append((best_complex, most_common_class, coverage, precision))
+
+                pbar.update(tqdm_max - len(self._P))
+                tqdm_max = len(self._P)
 
         most_common_class, count = self.most_common_class(self.data.index)
         total = classes_count[most_common_class]
@@ -177,11 +180,7 @@ class CN2:
         most_common_class = (
             self.data.iloc[covered_ex, :]["class"].value_counts().head(1)
         )
-        print(f"AAAAAAAAAAA{most_common_class.index[0]}")
-        print(
-            f"BBBBBBBBBBB{most_common_class[0]}"
-        )  # TODO: dlaczego to się wypierdala (ale nie przy iris)?
-        return most_common_class.index[0], most_common_class[0]
+        return most_common_class.index[0], most_common_class.iloc[0]
 
     def get_covered_examples(self, data, best_complex):
         """
@@ -260,7 +259,7 @@ class CN2:
             new_star = self.specialize_star(star, self._selectors)
 
             # needs to be this way because list is not a hashable type (so here can't be complex)
-            for idx in tqdm(range(len(new_star))):
+            for idx in range(len(new_star)):
                 cpx = new_star[idx]
                 cpx_salience = self.salience(cpx)
                 if cpx_salience > self.epsilon:
@@ -279,7 +278,6 @@ class CN2:
 
             if len(star) == 0 or best_salience < self.epsilon:
                 break
-            print(f"Best salience: {best_salience}; Star size: {len(star)}")
 
         return best_complex
 
@@ -320,21 +318,31 @@ def test(name: str):
     rules = cn2.fit(f"./data/csv/{name}.csv")
     end = time.time()
     training_time = end - start
+
     start = time.time()
     results, accuracy = cn2.predict(f"./data/csv/{name}.csv", rules)
     end = time.time()
     prediction_time = end - start
-    pretty_print_results(results)
+
+    previous_stdout = sys.stdout
+    sys.stdout = open(f"./data/{name}.report", "w")
+
+    print(text2art(name, font="type-set"))
     print(f"Overall accuracy for {name}: {accuracy}%\n")
     print(f"Time taken to train the algorithm: {training_time} seconds")
     print(f"Time taken to predict: {prediction_time} seconds\n")
     print(f"Training time per example: {training_time / len(results)} seconds")
     print(f"Prediction time per example: {prediction_time / len(results)} seconds")
-    with open(f"./data/{name}_report.json", "w") as f:
-        json.dump(results, f)
+    pretty_print_results(results)
+
+    sys.stdout.close()
+    sys.stdout = previous_stdout
+
+    return
 
 
 if __name__ == "__main__":
+    # the tests are ordered by running time (ascending)
     test("iris")
-    # test("breast-cancer-wisconsin")
-    # test("zoo")
+    test("zoo")
+    test("breast-cancer-wisconsin")
