@@ -275,7 +275,9 @@ class CN2:
             )[: self.star_max_size]
 
             star = [new_star[x[0]] for x in best_complexes]
-
+            # TODO:          /|\
+            #                 |
+            #          czemu tu jest warning? To moje IDE głupieje?
             if len(star) == 0 or best_salience < self.epsilon:
                 break
 
@@ -290,14 +292,21 @@ def pretty_print_results(results: list) -> None:
     :return: Nothing
     """
     print("\n\n")
-    for result in results:
-        rule = result["rule"]
+    number_of_valid_rules = len(  # drop rules with 0 coverage
+        list(
+            filter(
+                lambda x: x["correct predictions"] + x["wrong predictions"] > 0, results
+            )
+        )
+    )
+    for i, result in enumerate(results):
         correct = result["correct predictions"]
         wrong = result["wrong predictions"]
         if correct + wrong == 0:
             continue
+        rule = result["rule"]
 
-        print(f"For rule:\n{rule}")
+        print(f"Rule #{i + 1}/{number_of_valid_rules}:\n{rule}")
         print(f"Correct: {correct}; Wrong: {wrong}")
         print(f"Accuracy: {correct / (correct + wrong) * 100}%")
         print("\n")
