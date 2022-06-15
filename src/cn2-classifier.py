@@ -330,17 +330,17 @@ def test(name: str):
     cn2 = CN2()
     # measure time it takes to train the algorithm
     start = time.time()
-    rules = cn2.fit(f"./data/csv/{name}.csv")
+    rules = cn2.fit(f"../data/csv/{name}.csv")
     end = time.time()
     training_time = end - start
 
     start = time.time()
-    results, accuracy = cn2.predict(f"./data/csv/{name}.csv", rules)
+    results, accuracy = cn2.predict(f"../data/csv/{name}.csv", rules)
     end = time.time()
     prediction_time = end - start
 
     previous_stdout = sys.stdout
-    sys.stdout = open(f"./data/{name}.report", "w")
+    sys.stdout = open(f"../data/output/{name}.report", "w")
 
     print(text2art(name, font="type-set"))
     print(f"Overall accuracy for {name}: {accuracy}%\n")
