@@ -1,0 +1,134 @@
+   ###    #####      ###     ####   
+    #     #    #      #     #    #  
+    #     #    #      #     #       
+    #     #####       #      ####   
+    #     #  #        #          #  
+    #     #   #       #     #    #  
+   ###    #    #     ###     ####   
+                                    
+
+Overall accuracy for iris: 96.0%
+
+Time taken to train the algorithm: 5.5097150802612305 seconds
+Time taken to predict: 0.024008512496948242 seconds
+
+Training time per example: 0.2899850042242753 seconds
+Prediction time per example: 0.0012636059208920127 seconds
+
+
+
+Rule #1/19:
+([('sepal_length', '(7.18, 7.9]')], 'Iris-virginica', 0.22, 1.0)
+Correct: 11; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #2/19:
+([('sepal_width', '(3.44, 3.92]')], 'Iris-setosa', 0.34, 1.0)
+Correct: 17; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #3/19:
+([('sepal_width', '(3.92, 4.4]')], 'Iris-setosa', 0.08, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #4/19:
+([('petal_length', '(0.994, 2.18]')], 'Iris-setosa', 0.58, 1.0)
+Correct: 29; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #5/19:
+([('petal_length', '(5.72, 6.9]')], 'Iris-virginica', 0.1, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #6/19:
+([('petal_length', '(2.18, 3.36]')], 'Iris-versicolor', 0.06, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #7/19:
+([('petal_width', '(0.58, 1.06]')], 'Iris-versicolor', 0.1, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #8/19:
+([('sepal_length', '(4.296, 5.02]')], 'Iris-virginica', 0.02, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #9/19:
+([('petal_length', '(3.36, 4.54]')], 'Iris-versicolor', 0.56, 1.0)
+Correct: 28; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #10/19:
+([('sepal_length', '(5.02, 5.74]')], 'Iris-virginica', 0.04, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #11/19:
+([('sepal_width', '(1.998, 2.48]')], 'Iris-virginica', 0.02, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #12/19:
+([('petal_width', '(2.02, 2.5]')], 'Iris-virginica', 0.28, 1.0)
+Correct: 14; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #13/19:
+([('petal_width', '(1.06, 1.54]'), ('sepal_length', '(6.46, 7.18]')], 'Iris-versicolor', 0.12, 1.0)
+Correct: 6; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #14/19:
+([('petal_width', '(1.54, 2.02]'), ('sepal_width', '(2.48, 2.96]')], 'Iris-virginica', 0.14, 0.875)
+Correct: 7; Wrong: 1
+Accuracy: 87.5%
+
+
+Rule #15/19:
+([('petal_width', '(1.06, 1.54]'), ('sepal_width', '(2.96, 3.44]')], 'Iris-versicolor', 0.02, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #16/19:
+([('sepal_length', '(6.46, 7.18]')], 'Iris-virginica', 0.06, 0.75)
+Correct: 3; Wrong: 1
+Accuracy: 75.0%
+
+
+Rule #17/19:
+([('sepal_width', '(2.96, 3.44]')], 'Iris-virginica', 0.08, 0.6666666666666666)
+Correct: 4; Wrong: 2
+Accuracy: 66.66666666666666%
+
+
+Rule #18/19:
+([('sepal_length', '(5.74, 6.46]')], 'Iris-versicolor', 0.06, 0.6)
+Correct: 3; Wrong: 2
+Accuracy: 60.0%
+
+
+Rule #19/19:
+([], 'Iris-setosa', 1.0, 0.3333333333333333)
+Correct: 0; Wrong: 0
+Accuracy: NaN%
+
+
+1 rule had 0 coverage

@@ -1,0 +1,428 @@
+ #####    #####    ######     ##      ####     #####              ###      ##     #    #     ###    ######   #####             #    #     ###     ####      ###      ##     #    #    ####      ###    #    #  
+  #   #   #    #   #         #  #    #    #      #               #   #    #  #    ##   #    #   #   #        #    #            #    #      #     #    #    #   #    #  #    ##   #   #    #      #     ##   #  
+  #   #   #    #   #        #    #   #           #              #        #    #   # #  #   #        #        #    #            #    #      #     #        #        #    #   # #  #   #           #     # #  #  
+  ####    #####    ####     ######    ####       #     ######   #        ######   #  # #   #        ####     #####    ######   # ## #      #      ####    #        #    #   #  # #    ####       #     #  # #  
+  #   #   #  #     #        #    #        #      #              #        #    #   #   ##   #        #        #  #              # ## #      #          #   #        #    #   #   ##        #      #     #   ##  
+  #   #   #   #    #        #    #   #    #      #               #   #   #    #   #    #    #   #   #        #   #             ##  ##      #     #    #    #   #    #  #    #    #   #    #      #     #    #  
+ #####    #    #   ######   #    #    ####       #                ###    #    #   #    #     ###    ######   #    #            #    #     ###     ####      ###      ##     #    #    ####      ###    #    #  
+                                                                                                                                                                                                               
+
+Overall accuracy for breast-cancer-wisconsin: 100.0%
+
+Time taken to train the algorithm: 311.22762727737427 seconds
+Time taken to predict: 0.14891409873962402 seconds
+
+Training time per example: 4.576876871726093 seconds
+Prediction time per example: 0.002189913216759177 seconds
+
+
+
+Rule #1/68:
+([('clump_thickness', 9)], 4, 0.058091286307053944, 1.0)
+Correct: 14; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #2/68:
+([('clump_thickness', 10)], 4, 0.2863070539419087, 1.0)
+Correct: 69; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #3/68:
+([('uniformity_cell_size', 5)], 4, 0.07883817427385892, 1.0)
+Correct: 19; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #4/68:
+([('uniformity_cell_size', 10)], 4, 0.17012448132780084, 1.0)
+Correct: 41; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #5/68:
+([('uniformity_cell_shape', 9)], 4, 0.02074688796680498, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #6/68:
+([('uniformity_cell_shape', 10)], 4, 0.02074688796680498, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #7/68:
+([('marginal_adhesion', 7)], 4, 0.02074688796680498, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #8/68:
+([('marginal_adhesion', 8)], 4, 0.029045643153526972, 1.0)
+Correct: 7; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #9/68:
+([('bare_nuclei', 6.0)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #10/68:
+([('bare_nuclei', 9.0)], 4, 0.02074688796680498, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #11/68:
+([('epithelial_cell_size', 7)], 2, 0.006550218340611353, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #12/68:
+([('bland_chromatin', 8)], 4, 0.016597510373443983, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #13/68:
+([('bland_chromatin', 9)], 4, 0.012448132780082987, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #14/68:
+([('bland_chromatin', 10)], 4, 0.008298755186721992, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #15/68:
+([('normal_nucleoli', 9)], 4, 0.016597510373443983, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #16/68:
+([('normal_nucleoli', 10)], 4, 0.024896265560165973, 1.0)
+Correct: 6; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #17/68:
+([('bare_nuclei', 2.0)], 2, 0.04585152838427948, 1.0)
+Correct: 21; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #18/68:
+([('bland_chromatin', 6)], 4, 0.008298755186721992, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #19/68:
+([('mitoses', 4)], 4, 0.008298755186721992, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #20/68:
+([('mitoses', 5)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #21/68:
+([('mitoses', 6)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #22/68:
+([('mitoses', 8)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #23/68:
+([('uniformity_cell_size', 1), ('clump_thickness', 1)], 2, 0.27510917030567683, 1.0)
+Correct: 126; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #24/68:
+([('epithelial_cell_size', 10)], 4, 0.02074688796680498, 1.0)
+Correct: 5; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #25/68:
+([('uniformity_cell_size', 9)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #26/68:
+([('mitoses', 7)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #27/68:
+([('normal_nucleoli', 2)], 2, 0.048034934497816595, 1.0)
+Correct: 22; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #28/68:
+([('uniformity_cell_size', 1), ('clump_thickness', 2)], 2, 0.0851528384279476, 1.0)
+Correct: 39; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #29/68:
+([('uniformity_cell_size', 1), ('clump_thickness', 3)], 2, 0.1615720524017467, 1.0)
+Correct: 74; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #30/68:
+([('bland_chromatin', 5)], 4, 0.029045643153526972, 1.0)
+Correct: 7; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #31/68:
+([('clump_thickness', 1)], 2, 0.015283842794759825, 1.0)
+Correct: 7; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #32/68:
+([('uniformity_cell_size', 7)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #33/68:
+([('uniformity_cell_shape', 7)], 4, 0.016597510373443983, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #34/68:
+([('uniformity_cell_shape', 8)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #35/68:
+([('uniformity_cell_size', 8)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #36/68:
+([('epithelial_cell_size', 8)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #37/68:
+([('uniformity_cell_shape', 5)], 4, 0.024896265560165973, 1.0)
+Correct: 6; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #38/68:
+([('bare_nuclei', 8.0)], 4, 0.008298755186721992, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #39/68:
+([('bare_nuclei', nan)], 2, 0.006550218340611353, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #40/68:
+([('uniformity_cell_size', 6)], 4, 0.016597510373443983, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #41/68:
+([('marginal_adhesion', 2)], 2, 0.028384279475982533, 1.0)
+Correct: 13; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #42/68:
+([('marginal_adhesion', 5)], 2, 0.004366812227074236, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #43/68:
+([('marginal_adhesion', 9)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #44/68:
+([('bare_nuclei', 7.0)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #45/68:
+([('bare_nuclei', 10.0)], 4, 0.016597510373443983, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #46/68:
+([('marginal_adhesion', 6)], 2, 0.006550218340611353, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #47/68:
+([('epithelial_cell_size', 4)], 2, 0.008733624454148471, 1.0)
+Correct: 4; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #48/68:
+([('marginal_adhesion', 10)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #49/68:
+([('clump_thickness', 3)], 2, 0.015283842794759825, 1.0)
+Correct: 7; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #50/68:
+([('epithelial_cell_size', 5)], 2, 0.004366812227074236, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #51/68:
+([('bland_chromatin', 1)], 2, 0.10262008733624454, 1.0)
+Correct: 47; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #52/68:
+([('bare_nuclei', 4.0)], 4, 0.012448132780082987, 1.0)
+Correct: 3; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #53/68:
+([('clump_thickness', 6)], 2, 0.013100436681222707, 1.0)
+Correct: 6; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #54/68:
+([('uniformity_cell_shape', 2)], 2, 0.03056768558951965, 1.0)
+Correct: 14; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #55/68:
+([('clump_thickness', 7)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #56/68:
+([('uniformity_cell_size', 4)], 2, 0.004366812227074236, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #57/68:
+([('clump_thickness', 8)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #58/68:
+([('uniformity_cell_size', 2)], 2, 0.004366812227074236, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #59/68:
+([('uniformity_cell_shape', 4)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #60/68:
+([('clump_thickness', 2)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #61/68:
+([('marginal_adhesion', 4)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #62/68:
+([('epithelial_cell_size', 3)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #63/68:
+([('marginal_adhesion', 1)], 2, 0.1091703056768559, 1.0)
+Correct: 50; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #64/68:
+([('clump_thickness', 5)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #65/68:
+([('epithelial_cell_size', 2)], 2, 0.004366812227074236, 1.0)
+Correct: 2; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #66/68:
+([('bare_nuclei', 1.0)], 2, 0.002183406113537118, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #67/68:
+([('clump_thickness', 4)], 4, 0.004149377593360996, 1.0)
+Correct: 1; Wrong: 0
+Accuracy: 100.0%
+
+
+Rule #68/68:
+([], 2, 1.0, 0.6552217453505007)
+Correct: 0; Wrong: 0
+Accuracy: NaN%
+
+
+1 rule had 0 coverage
